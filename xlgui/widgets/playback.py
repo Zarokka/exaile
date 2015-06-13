@@ -72,7 +72,9 @@ class PlaybackProgressBar(Gtk.ProgressBar):
     def __init__(self, player):
         Gtk.ProgressBar.__init__(self)
         self.__player = player
-        
+
+        self.set_show_text(True)
+
         self.reset()
 
         self.formatter = ProgressBarFormatter(player)
@@ -827,10 +829,10 @@ class SeekProgressBar(PlaybackProgressBar, providers.ProviderHandler):
             * Alt+Up/Right: seek 1% forward
             * Alt+Down/Left: seek 1% backward
         """
-        if self.get_state() & Gtk.StateType.INSENSITIVE:
+        _, state = event.get_state()
+        if state & Gtk.StateType.INSENSITIVE:
             return
-
-        if not event.get_state() & Gdk.ModifierType.MOD1_MASK:
+        if not state & Gdk.ModifierType.MOD1_MASK:
             return
 
         if event.keyval in (Gdk.KEY_Up, Gdk.KEY_Right):
@@ -853,7 +855,8 @@ class SeekProgressBar(PlaybackProgressBar, providers.ProviderHandler):
         """
             Completes seeking via keyboard interaction
         """
-        if not event.get_state() & Gdk.ModifierType.MOD1_MASK:
+        _, state = event.get_state()
+        if not state & Gdk.ModifierType.MOD1_MASK:
             return
 
         if event.keyval in (Gdk.KEY_Up, Gdk.KEY_Right):
